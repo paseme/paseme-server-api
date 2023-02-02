@@ -1,6 +1,8 @@
 const { MongoClient } = require("mongodb");
 const { customAlphabet } = require("nanoid");
 
+const nanoid = customAlphabet("012345abcd", 4); 
+
 module.exports = async function(req, res) {
 
     const client = new MongoClient(process.env.MONGODB_URI);
@@ -23,28 +25,33 @@ module.exports = async function(req, res) {
 
         });
 
-    const nanoid = customAlphabet("012345abcd", 4); 
+    client.db("paseme").collection("atendimento").insertOne({ 
+        
+        codigo: nanoid(), 
+        
+        tempo: new Date().toLocaleString("pt-BR") , 
+        
+        trafego: {
 
-    const codigo = nanoid();
-
-    const tempo = new Date().toLocaleDateString("pt-BR") 
-
-    const atendido = false
-
-    client.db("paseme").collection("atendimento").insertOne({ codigo, tempo, atendido })
+            ip: req.headers["x-real-ip"],
+    
+            pais: req.headers["x-vercel-ip-country"],
+    
+            regiao: req.headers["x-vercel-ip-country-region"],
+    
+            cidade: req.headers["x-vercel-ip-city"],
+    
+        }, 
+        
+        atendido: false,
+    
+    })
 
         .then(function(result) {
 
             console.log(result)
 
-            const trafego = {
-                ip: req.headers["x-real-ip"],
-                pais: req.headers["x-vercel-ip-country"],
-                regiao: req.headers["x-vercel-ip-country-region"],
-                cidade: req.headers["x-vercel-ip-city"]
-            }
-
-            return res.status(200).json({ mensagem: "DOCUMENTO SALVO!", trafego });
+            return res.status(200).json({ mensagem: "DOCUMENTO SALVO!" });
 
         })
 
