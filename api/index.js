@@ -27,13 +27,19 @@ module.exports = async function(req, res) {
 
     const codigo = nanoid();
 
-    client.db("paseme").collection("atendimento").insertOne({ codigo })
+    const tempo = new Date().toLocaleDateString("pt-BR") 
+
+    const atendido = false
+
+    client.db("paseme").collection("atendimento").insertOne({ codigo, tempo, atendido })
 
         .then(function(result) {
 
             console.log(result)
 
-            return res.status(200).json({ mensagem: "DOCUMENTO SALVO!" });
+            const ip = req.headers["x-vercel-ip-city"]
+
+            return res.status(200).json({ mensagem: "DOCUMENTO SALVO!", ip });
 
         })
 
