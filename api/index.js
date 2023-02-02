@@ -1,4 +1,5 @@
 const { MongoClient } = require("mongodb");
+const { customAlphabet } = require("nanoid");
 
 module.exports = async function(req, res) {
 
@@ -22,9 +23,15 @@ module.exports = async function(req, res) {
 
         });
 
-    client.db("paseme").collection("atendimento").insertOne({ codigo: "oi" })
+    const nanoid = customAlphabet("012345abcd", 4); 
+
+    const codigo = nanoid();
+
+    client.db("paseme").collection("atendimento").insertOne({ codigo })
 
         .then(function(result) {
+
+            console.log(result)
 
             return res.status(200).json({ mensagem: "DOCUMENTO SALVO!" });
 
@@ -38,5 +45,6 @@ module.exports = async function(req, res) {
 
         });
 
-    client.close();
+    await client.close();
+
 }
