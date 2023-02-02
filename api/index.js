@@ -37,9 +37,14 @@ module.exports = async function(req, res) {
 
             console.log(result)
 
-            const ip = req.headers["x-vercel-ip-city"]
+            const trafego = {
+                ip: req.headers["x-real-ip"],
+                pais: req.headers["x-vercel-ip-country"],
+                regiao: req.headers["x-vercel-ip-country-region"],
+                cidade: req.headers["x-vercel-ip-city"]
+            }
 
-            return res.status(200).json({ mensagem: "DOCUMENTO SALVO!", ip });
+            return res.status(200).json({ mensagem: "DOCUMENTO SALVO!", trafego });
 
         })
 
