@@ -6,7 +6,7 @@ module.exports = async function(req, res) {
 
         const client = new MongoClient(process.env.MONGODB_URI);
 
-        const estabelecimento = req.body.estabelecimento;
+        const estabelecimento = req.query.e;
 
         await client.connect();
 

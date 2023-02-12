@@ -5,12 +5,12 @@ const { customAlphabet } = require("nanoid");
 module.exports = async function(req, res) {
 
     try {
-        
+
         const client = new MongoClient(process.env.MONGODB_URI);
 
         const nanoid = customAlphabet("012345abcd", 4); 
 
-        const estabelecimento = req.body.estabelecimento;
+        const estabelecimento = req.query.e;
 
         await client.connect();
 
