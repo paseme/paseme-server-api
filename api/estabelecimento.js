@@ -22,23 +22,11 @@ module.exports = async function(req, res) {
 
         });
 
-    client.db("paseme").collection("atendimento").find({}).toArray()
+    const cursor = client.db("paseme").collection("atendimento").find({});
 
-        .then(function(result) {
+    const results = await cursor.toArray();
 
-            console.log(result);
-
-            return res.status(200).json(result);
-
-        })
-
-        .catch(function(erro) {
-
-            console.error(erro);
-
-            return res.status(500).json({ mensagem: "ERRO AO CONSULTAR DOCUMENTOS!" });
-
-        });
+    res.status(200).json(results);
 
     await client.close();
 
