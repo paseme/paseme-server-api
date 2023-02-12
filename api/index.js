@@ -38,7 +38,7 @@ export default async function(request, response) {
         
         await client.close();
 
-        return response.redirect("https://paseme.github.io/paseme-web/")
+        return response.redirect(`https://paseme.github.io/paseme-web/?e=${estabelecimento}&id=${result.insertedId}`)
 
     }
 
