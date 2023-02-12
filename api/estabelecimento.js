@@ -22,7 +22,7 @@ module.exports = async function(req, res) {
 
         });
 
-    client.db("paseme").collection("atendimento").find()
+    client.db("paseme").collection("atendimento").find({}).toArray()
 
         .then(function(result) {
 
