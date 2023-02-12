@@ -1,12 +1,12 @@
 const { MongoClient } = require("mongodb");
 
-module.exports = async function(req, res) {
+export default async function(request, response) {
     
     try {
 
         const client = new MongoClient(process.env.MONGODB_URI);
 
-        const estabelecimento = req.query.e;
+        const estabelecimento = request.query.e;
 
         await client.connect();
 
@@ -16,13 +16,17 @@ module.exports = async function(req, res) {
 
         await client.close();
 
-        res.status(200).json(results);
+        return response.status(200).json(results);
 
     }
     
     catch(erro) {
 
-        res.status(500).json({ mensagem: "Houve um erro!" });
+        return response.status(500).json({ 
+            
+            mensagem: "Houve um erro!" 
+        
+        });
 
     }
 

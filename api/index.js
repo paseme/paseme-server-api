@@ -2,7 +2,7 @@ const { MongoClient } = require("mongodb");
 
 const { customAlphabet } = require("nanoid");
 
-module.exports = async function(req, res) {
+export default async function(request, response) {
 
     try {
 
@@ -10,11 +10,11 @@ module.exports = async function(req, res) {
 
         const nanoid = customAlphabet("012345abcd", 4); 
 
-        const estabelecimento = req.query.e;
+        const estabelecimento = request.query.e;
 
         await client.connect();
 
-        const result = await client.db("paseme").collection(estabelecimento).insertOne({ 
+        await client.db("paseme").collection(estabelecimento).insertOne({ 
             
             codigo: nanoid(), 
             
@@ -22,13 +22,13 @@ module.exports = async function(req, res) {
             
             trafego: {
 
-                ip: req.headers["x-real-ip"],
+                ip: request.headers["x-real-ip"],
         
-                pais: req.headers["x-vercel-ip-country"],
+                pais: request.headers["x-vercel-ip-country"],
         
-                regiao: req.headers["x-vercel-ip-country-region"],
+                regiao: request.headers["x-vercel-ip-country-region"],
         
-                cidade: req.headers["x-vercel-ip-city"],
+                cidade: request.headers["x-vercel-ip-city"],
         
             }, 
             
@@ -38,13 +38,17 @@ module.exports = async function(req, res) {
         
         await client.close();
 
-        res.status(200).json(result);
+        return response.redirect("http://google.com/")
 
     }
 
     catch(erro) {
 
-        res.status(500).json({ mensagem: "Houve um erro!" });
+        return response.status(500).json({ 
+            
+            mensagem: "Houve um erro!" 
+        
+        });
 
     }
 
