@@ -12,7 +12,7 @@ export default async function(request, response) {
 
         await client.connect();
 
-        const result = client.db("paseme").collection(estabelecimento).findOne({
+        const result = await client.db("paseme").collection(estabelecimento).findOne({
 
             "_id": new ObjectId(codigo)
 
