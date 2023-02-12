@@ -28,9 +28,7 @@ export default async function(request, response) {
 
         return response.status(500).json({ 
             
-            mensagem: "Houve um erro!",
-
-            falha: erro.message
+            mensagem: "Houve um erro!"
         
         });
 
