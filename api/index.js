@@ -1,68 +1,55 @@
 const { MongoClient } = require("mongodb");
-const { customAlphabet } = require("nanoid");
 
-const nanoid = customAlphabet("012345abcd", 4); 
+const { customAlphabet } = require("nanoid");
 
 module.exports = async function(req, res) {
 
-    const client = new MongoClient(process.env.MONGODB_URI);
+    try {
 
-    client.connect()
+        const client = new MongoClient(process.env.MONGODB_URI);
 
-        .then(function() {
+        const nanoid = customAlphabet("012345abcd", 4); 
+
+        const estabelecimento = req.body.estabelecimento;
+
+        await client.connect();
+
+        const result = await client.db("paseme").collection(estabelecimento).insertOne({ 
             
-            console.log("CONECTADO COM O BANCO DE DADOS!");
+            codigo: nanoid(), 
+            
+            tempo: new Date().toLocaleString("pt-BR"), 
+            
+            trafego: {
 
-            //return res.status(200).json({ mensagem: "CONECTADO COM O BANCO DE DADOS!" });
-
+                ip: req.headers["x-real-ip"],
+        
+                pais: req.headers["x-vercel-ip-country"],
+        
+                regiao: req.headers["x-vercel-ip-country-region"],
+        
+                cidade: req.headers["x-vercel-ip-city"],
+        
+            }, 
+            
+            atendido: false,
+        
         })
-
-        .catch(function(erro) {
-
-            console.error(erro);
-
-            //return res.status(500).json({ mensagem: "ERRO AO CONECTAR COM O BANCO DE DADOS!" });
-
-        });
-
-    client.db("paseme").collection("atendimento").insertOne({ 
         
-        codigo: nanoid(), 
+        res.status(200).json(result);
+
+    }
+
+    catch(erro) {
+
+        res.status(500).json({ mensagem: "Houve um erro!" });
+
+    }
+
+    finally {
         
-        tempo: new Date().toLocaleString("pt-BR") , 
-        
-        trafego: {
+        await client.close();
 
-            ip: req.headers["x-real-ip"],
-    
-            pais: req.headers["x-vercel-ip-country"],
-    
-            regiao: req.headers["x-vercel-ip-country-region"],
-    
-            cidade: req.headers["x-vercel-ip-city"],
-    
-        }, 
-        
-        atendido: false,
-    
-    })
-
-        .then(function(result) {
-
-            console.log(result);
-
-            return res.status(200).json({ mensagem: "DOCUMENTO SALVO!" });
-
-        })
-
-        .catch(function(erro) {
-
-            console.error(erro);
-
-            return res.status(500).json({ mensagem: "ERRO AO SALVAR DOCUMENTO!" });
-
-        });
-
-    await client.close();
+    }
 
 }

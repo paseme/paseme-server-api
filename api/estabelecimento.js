@@ -2,32 +2,34 @@ const { MongoClient } = require("mongodb");
 
 module.exports = async function(req, res) {
     
-    const client = new MongoClient(process.env.MONGODB_URI);
+    try {
 
-    client.connect()
+        const client = new MongoClient(process.env.MONGODB_URI);
 
-        .then(function() {
-            
-            console.log("CONECTADO COM O BANCO DE DADOS!");
+        const estabelecimento = req.body.estabelecimento;
 
-            //return res.status(200).json({ mensagem: "CONECTADO COM O BANCO DE DADOS!" });
+        await client.connect();
 
-        })
+        const cursor = client.db("paseme").collection(estabelecimento).find({});
 
-        .catch(function(erro) {
+        const results = await cursor.toArray();
 
-            console.error(erro);
+        await client.close();
 
-            //return res.status(500).json({ mensagem: "ERRO AO CONECTAR COM O BANCO DE DADOS!" });
+        res.status(200).json(results);
 
-        });
+    }
+    
+    catch(erro) {
 
-    const cursor = client.db("paseme").collection("atendimento").find({});
+        res.status(500).json({ mensagem: "Houve um erro!" });
 
-    const results = await cursor.toArray();
+    }
 
-    res.status(200).json(results);
+    finally {
+        
+        await client.close();
 
-    await client.close();
+    }
 
 }
