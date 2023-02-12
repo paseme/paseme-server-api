@@ -14,7 +14,7 @@ export default async function(request, response) {
 
         const result = client.db("paseme").collection(estabelecimento).findOne({
 
-            "_id": ObjectId(codigo)
+            "_id": new ObjectId(codigo)
 
         });
 
