@@ -14,7 +14,7 @@ export default async function(request, response) {
 
         await client.connect();
 
-        await client.db("paseme").collection(estabelecimento).insertOne({ 
+        const result = await client.db("paseme").collection(estabelecimento).insertOne({ 
             
             codigo: nanoid(), 
             
@@ -38,7 +38,7 @@ export default async function(request, response) {
         
         await client.close();
 
-        return response.redirect("http://google.com/")
+        return response.redirect("https://paseme.github.io/paseme-web/")
 
     }
 
