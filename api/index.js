@@ -5,7 +5,7 @@ const { customAlphabet } = require("nanoid");
 module.exports = async function(req, res) {
 
     try {
-
+        
         const client = new MongoClient(process.env.MONGODB_URI);
 
         const nanoid = customAlphabet("012345abcd", 4); 
@@ -36,6 +36,8 @@ module.exports = async function(req, res) {
         
         })
         
+        await client.close();
+
         res.status(200).json(result);
 
     }
@@ -43,12 +45,6 @@ module.exports = async function(req, res) {
     catch(erro) {
 
         res.status(500).json({ mensagem: "Houve um erro!" });
-
-    }
-
-    finally {
-        
-        await client.close();
 
     }
 
