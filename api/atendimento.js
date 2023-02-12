@@ -30,7 +30,7 @@ export default async function(request, response) {
             
             mensagem: "Houve um erro!",
 
-            falha: erro
+            falha: erro.message
         
         });
 
