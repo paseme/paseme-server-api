@@ -1,10 +1,7 @@
 const { MongoClient } = require("mongodb");
-const { customAlphabet } = require("nanoid");
-
-const nanoid = customAlphabet("012345abcd", 4); 
 
 module.exports = async function(req, res) {
-
+    
     const client = new MongoClient(process.env.MONGODB_URI);
 
     client.connect()
@@ -25,33 +22,13 @@ module.exports = async function(req, res) {
 
         });
 
-    client.db("paseme").collection("atendimento").insertOne({ 
-        
-        codigo: nanoid(), 
-        
-        tempo: new Date().toLocaleString("pt-BR") , 
-        
-        trafego: {
-
-            ip: req.headers["x-real-ip"],
-    
-            pais: req.headers["x-vercel-ip-country"],
-    
-            regiao: req.headers["x-vercel-ip-country-region"],
-    
-            cidade: req.headers["x-vercel-ip-city"],
-    
-        }, 
-        
-        atendido: false,
-    
-    })
+    client.db("paseme").collection("atendimento").find()
 
         .then(function(result) {
 
             console.log(result);
 
-            return res.status(200).json({ mensagem: "DOCUMENTO SALVO!" });
+            return res.status(200).json(result);
 
         })
 
@@ -59,7 +36,7 @@ module.exports = async function(req, res) {
 
             console.error(erro);
 
-            return res.status(500).json({ mensagem: "ERRO AO SALVAR DOCUMENTO!" });
+            return res.status(500).json({ mensagem: "ERRO AO CONSULTAR DOCUMENTOS!" });
 
         });
 
