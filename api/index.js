@@ -18,7 +18,7 @@ export default async function(request, response) {
             
             codigo: nanoid(), 
             
-            tempo: new Date().toLocaleString("pt-BR"), 
+            tempo: new Date().toString(), 
             
             trafego: {
 
