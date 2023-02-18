@@ -35,9 +35,11 @@ export default async function(request, response) {
 
         const { esta } = request.query;
 
-        const database = client.db("paseme").collection(esta) 
+        const collection = client.db("paseme").collection(esta) 
 
-        const result = await database.insertOne({ 
+        await collection.createIndex({ "service.time": 1 }, { expireAfterSeconds: 60 * 60 * 5 });
+
+        const result = await collection.insertOne({ 
             
             service: {
 
