@@ -71,7 +71,7 @@ export default async function(request, response) {
 
         clientURL.searchParams.append("id", result.insertedId);
 
-        return response.redirect(clientURL);
+        return response.redirect(clientURL.toString());
 
     }
 
